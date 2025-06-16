@@ -9,8 +9,10 @@ import org.testng.annotations.*;
 import pages.*;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-public class TambahProkerTestNegativePastDate {
+public class TambahProkerTestBoundaryValues {
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -65,41 +67,59 @@ public class TambahProkerTestNegativePastDate {
         System.out.println("Tes 3 Berhasil: Navigasi ke halaman tambah proker sukses.");
     }
 
+    /**
+     * Skenario Boundary VALID: Dijalankan pertama (priority 4).
+     * Tes ini diharapkan berhasil dan berakhir di halaman daftar proker.
+     */
     @Test(priority = 4, dependsOnMethods = "test03_NavigasiKeTambahProker")
-    public void test04_BugReport_TambahDenganTanggalLewat() {
+    public void test04_ValidBoundary_TambahDenganTanggalHariIni() {
         TambahProgramKerjaPage tambahProkerPage = new TambahProgramKerjaPage(driver, wait);
 
-        // --- Data untuk Skenario Bug ---
-        // 1. Judul unik untuk identifikasi
-        String judulProkerBug = "BUG REPORT - Proker Tanggal Lewat " + System.currentTimeMillis();
-        // 2. Tanggal manual dari masa lalu dengan format
-        String tanggalLewat = "01-01-2024";
+        String tanggalHariIni = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String judulProkerValid = "TEST_BOUNDARY_VALID (Hari Ini) - " + System.currentTimeMillis();
+        String deskripsiValid = "Input untuk tes boundary valid (tanggal hari ini)."; // Deskripsi disederhanakan
 
-        // --- Panggil `fillForm` dengan 6 argumen yang urutannya benar ---
         tambahProkerPage.fillForm(
-                judulProkerBug,      // 1. Judul
-                "1",                 // 2. Nomor RT/RW
-                tanggalLewat,        // 3. Tanggal (Format yyyy-MM-dd)
-                "09:30",             // 4. Waktu
-                "Lokasi Laporan Bug",// 5. Lokasi
-                "Deskripsi untuk laporan bug tanggal lewat." // 6. Deskripsi
+                judulProkerValid, "1", tanggalHariIni, "11:00", "Lokasi Boundary Valid", deskripsiValid
         );
-
         tambahProkerPage.clickSimpan();
 
-        // --- Logika untuk membuktikan bug ---
-        // 1. Terima alert konfirmasi pertama
         wait.until(ExpectedConditions.alertIsPresent()).accept();
-
-        // 2. Harapannya muncul alert SUKSES (inilah bug-nya)
         Alert successAlert = wait.until(ExpectedConditions.alertIsPresent());
         Assert.assertEquals(successAlert.getText(), "Program kerja berhasil ditambahkan!");
         successAlert.accept();
-
-        // 3. Tunggu redirect setelah sukses
         wait.until(ExpectedConditions.urlContains("/program-kerja/admin"));
 
-        // 4. Sengaja gagalkan tes untuk menandai BUG di laporan TestNG
-        Assert.fail("BUG TERKONFIRMASI: Aplikasi berhasil menyimpan program kerja dengan tanggal yang sudah lewat.");
+        System.out.println("Tes Boundary Valid Berhasil: Proker sukses dibuat dengan tanggal hari ini.");
+        Assert.assertTrue(driver.getCurrentUrl().contains("/program-kerja/admin"));
+    }
+
+    /**
+     * Skenario Boundary INVALID: Dijalankan kedua (priority 5).
+     * Tes ini untuk laporan bug dan sengaja dibuat gagal.
+     */
+    @Test(priority = 5, dependsOnMethods = "test04_ValidBoundary_TambahDenganTanggalHariIni")
+    public void test05_BugReport_TambahDenganTanggalLewat() {
+        // Melanjutkan dari test04, kita navigasi lagi ke form tambah
+        System.out.println("Memulai tes bug report dari halaman daftar proker...");
+        ProgramKerjaPage programKerjaPage = new ProgramKerjaPage(driver, wait);
+        programKerjaPage.clickAddNew();
+        wait.until(ExpectedConditions.urlContains("/tambah-program-kerja"));
+
+        TambahProgramKerjaPage tambahProkerPage = new TambahProgramKerjaPage(driver, wait);
+        String judulProkerBug = "BUG REPORT - TEST_BOUNDARY_INVALID - Proker Kemarin " + System.currentTimeMillis();
+        String tanggalKemarin = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+        tambahProkerPage.fillForm(
+                judulProkerBug, "1", tanggalKemarin, "09:30", "Lokasi Bug", "Deskripsi bug."
+        );
+        tambahProkerPage.clickSimpan();
+
+        wait.until(ExpectedConditions.alertIsPresent()).accept();
+        Alert successAlert = wait.until(ExpectedConditions.alertIsPresent());
+        Assert.assertEquals(successAlert.getText(), "Program kerja berhasil ditambahkan!");
+        successAlert.accept();
+        wait.until(ExpectedConditions.urlContains("/program-kerja/admin"));
+        Assert.fail("BUG TERKONFIRMASI: Aplikasi berhasil menyimpan proker dengan tanggal kemarin.");
     }
 }
