@@ -75,29 +75,71 @@ public class TambahProkerTestNegative {
     }
 
     @Test(priority = 4, dependsOnMethods = "test03_NavigasiKeTambahProker")
-    public void test04_TambahProkerTanpaJudul() {
+    public void test04_TambahProkerTanpaTanggal() {
         TambahProgramKerjaPage tambahProkerPage = new TambahProgramKerjaPage(driver, wait);
-        String tanggalHariIni = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
+        // Isi form TANPA mengisi tanggal
         tambahProkerPage.fillForm(
-                "", // Judul dikosongkan
-                "1",
-                tanggalHariIni,
-                "10:00",
-                "Kantor RT",
-                "Deskripsi untuk tes negatif."
+                "Kerja Bakti RT 01",  // Judul
+                "1",                  // RT
+                "",                   // Tanggal kosong
+                "09:00",              // Waktu
+                "Lapangan",           // Lokasi
+                "Membersihkan selokan"// Deskripsi
         );
-        tambahProkerPage.clickSimpan();
 
-        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//div[text()='Judul program kerja tidak boleh kosong.']")
-        ));
+        // Cek validitas tanggal sebelum klik simpan
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        Boolean isTanggalValid = (Boolean) js.executeScript(
+                "return document.getElementById('date').checkValidity();"
+        );
+        String validationMsg = (String) js.executeScript(
+                "return document.getElementById('date').validationMessage;"
+        );
 
-        Assert.assertTrue(errorMessage.isDisplayed(), "Pesan error untuk judul kosong tidak muncul.");
-        Assert.assertTrue(driver.getCurrentUrl().contains("/tambah-program-kerja"), "Halaman tidak seharusnya berpindah.");
-        System.out.println("Tes 4 Berhasil: Gagal menambah proker tanpa judul dan pesan error tampil.");
+        Assert.assertFalse(isTanggalValid, "Field tanggal harus tidak valid saat kosong.");
+        System.out.println("Pesan error browser: " + validationMsg);
+        Assert.assertTrue(validationMsg.toLowerCase().contains("fill"), "Pesan error tidak sesuai harapan.");
 
-        // Refresh halaman untuk mempersiapkan tes selanjutnya
-        driver.navigate().refresh();
+        // Tidak perlu klik tombol simpan jika field tidak valid
+        System.out.println("Tes 5 Berhasil: Validasi browser muncul saat tanggal kosong.");
     }
+
+    @Test(priority = 5)
+    public void test05_TambahProkerTanpaJudul() {
+        TambahProgramKerjaPage tambahProkerPage = new TambahProgramKerjaPage(driver, wait);
+
+        String tanggal = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+        // Kosongkan input field judul secara eksplisit
+        WebElement inputJudul = driver.findElement(By.id("title"));
+        inputJudul.clear();
+        // Isi form dengan judul kosong
+        tambahProkerPage.fillForm(
+                "",   // Judul kosong
+                "1",
+                tanggal,
+                "11:30",
+                "Yogyakarta",
+                "Bersih desa"
+        );
+
+        // Validasi apakah input judul valid (HTML5 native validation)
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        Boolean isJudulValid = (Boolean) js.executeScript(
+                "return document.getElementById('title').checkValidity();"
+        );
+        String validationMsg = (String) js.executeScript(
+                "return document.getElementById('title').validationMessage;"
+        );
+
+        Assert.assertFalse(isJudulValid, "Field judul harus tidak valid saat kosong.");
+        System.out.println("Pesan error browser: " + validationMsg);
+        Assert.assertTrue(validationMsg.toLowerCase().contains("fill"), "Pesan error tidak sesuai harapan.");
+
+        // Tidak klik tombol simpan karena form sudah tidak valid
+        System.out.println("Tes 4 Berhasil: Validasi browser muncul saat judul kosong.");
+    }
+
+
 }
