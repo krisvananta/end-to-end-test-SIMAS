@@ -35,12 +35,11 @@ public class EditProkerTest {
     @Test(priority = 1)
     public void test01_NavigasiKeHalamanLogin() {
         driver.get(baseUrl);
-        WebElement masukButton = driver.findElement(By.linkText("Masuk"));
-        try {
-            masukButton.click();
-        } catch (ElementClickInterceptedException e) {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", masukButton);
-        }
+
+        // ✅ Gunakan LandingPage
+        LandingPage landingPage = new LandingPage(driver, wait);
+        landingPage.clickMasuk();
+
         wait.until(ExpectedConditions.urlContains("/masuk"));
         Assert.assertTrue(driver.getCurrentUrl().contains("/masuk"));
         System.out.println("✅ Navigasi ke halaman login sukses.");
@@ -64,7 +63,7 @@ public class EditProkerTest {
         AdminDashboardPage dashboard = new AdminDashboardPage(driver, wait);
         dashboard.goToProgramKerja();
 
-        // Klik tombol edit program kerja pertama
+        // ✅ Bisa dibuatkan helper di ProgramKerjaPage kalau mau lebih POM
         WebElement editButton = wait.until(ExpectedConditions.elementToBeClickable(
                 By.xpath("(//a[contains(@href,'/edit')])[1]")
         ));
@@ -83,12 +82,12 @@ public class EditProkerTest {
 
         editPage.editForm(
                 newJudul,
-                "28/06/2025",       // Tanggal
-                "10:00",            // Waktu
-                "Jakarta Timur",    // Lokasi
-                "Progress",         // Status
-                "1",                // RT ID
-                "Deskripsi hasil edit otomatis oleh test." // Deskripsi
+                "28/06/2025",
+                "10:00",
+                "Jakarta Timur",
+                "Progress",
+                "1",
+                "Deskripsi hasil edit otomatis oleh test."
         );
 
         editPage.clickSimpan();
