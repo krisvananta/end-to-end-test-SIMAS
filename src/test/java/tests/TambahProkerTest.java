@@ -39,13 +39,12 @@ public class TambahProkerTest {
     public void test01_NavigasiKeHalamanLogin() {
         driver.get(baseUrl);
 
-        // ✅ Gunakan LandingPage
         LandingPage landingPage = new LandingPage(driver, wait);
         landingPage.clickMasuk();
 
         wait.until(ExpectedConditions.urlContains("/masuk"));
         Assert.assertTrue(driver.getCurrentUrl().contains("/masuk"));
-        System.out.println("✅ Tes 1 Berhasil: Navigasi ke halaman login sukses.");
+        System.out.println("Tes 1 Berhasil: Navigasi ke halaman login sukses.");
     }
 
     @Test(priority = 2, dependsOnMethods = "test01_NavigasiKeHalamanLogin")
@@ -59,7 +58,7 @@ public class TambahProkerTest {
                 By.xpath("//a[normalize-space()='Program Kerja']")));
         Assert.assertTrue(menuProgramKerja.isDisplayed(), "Menu Program Kerja tidak ditemukan setelah login.");
 
-        System.out.println("✅ Tes 2 Berhasil: Login ke dashboard sukses.");
+        System.out.println("Tes 2 Berhasil: Login ke dashboard sukses.");
     }
 
     @Test(priority = 3, dependsOnMethods = "test02_LoginKeDashboard")
@@ -72,7 +71,7 @@ public class TambahProkerTest {
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("title")));
         Assert.assertTrue(driver.getCurrentUrl().contains("/tambah-program-kerja"));
-        System.out.println("✅ Tes 3 Berhasil: Navigasi ke halaman tambah proker sukses.");
+        System.out.println("Tes 3 Berhasil: Navigasi ke halaman tambah proker sukses.");
     }
 
     @Test(priority = 4, dependsOnMethods = "test03_NavigasiKeTambahProker")
@@ -90,7 +89,7 @@ public class TambahProkerTest {
                 "Deskripsi final."
         );
         tambahProkerPage.clickSimpan();
-        tambahProkerPage.handleAlert(); // Handle 2 alert
+        tambahProkerPage.handleAlert();
 
         wait.until(ExpectedConditions.urlContains("/program-kerja/admin"));
 
@@ -98,11 +97,11 @@ public class TambahProkerTest {
         programKerjaPage.clickUpcomingTab();
 
         try {
-            Thread.sleep(2000); // Delay untuk melihat hasil
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        System.out.println("✅ Tes 4 Berhasil: Proses tambah proker dan pindah ke upcoming sukses.");
+        System.out.println("Tes 4 Berhasil: Proses tambah proker dan pindah ke upcoming sukses.");
     }
 }

@@ -12,7 +12,6 @@ public class ProgramKerjaPage {
     private By addNewButton = By.xpath("//button[normalize-space()='+ ADD NEW']");
     private By upcomingTab = By.cssSelector("button[data-filter='upcoming']");
 
-    // Diperbarui: Terima WebDriverWait dari luar
     public ProgramKerjaPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;

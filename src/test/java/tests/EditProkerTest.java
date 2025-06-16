@@ -36,7 +36,6 @@ public class EditProkerTest {
     public void test01_NavigasiKeHalamanLogin() {
         driver.get(baseUrl);
 
-        // ✅ Gunakan LandingPage
         LandingPage landingPage = new LandingPage(driver, wait);
         landingPage.clickMasuk();
 
@@ -55,7 +54,7 @@ public class EditProkerTest {
         WebElement menuProgramKerja = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//a[normalize-space()='Program Kerja']")));
         Assert.assertTrue(menuProgramKerja.isDisplayed());
-        System.out.println("✅ Login ke dashboard berhasil.");
+        System.out.println("Login ke dashboard berhasil.");
     }
 
     @Test(priority = 3, dependsOnMethods = "test02_LoginKeDashboard")
@@ -63,7 +62,6 @@ public class EditProkerTest {
         AdminDashboardPage dashboard = new AdminDashboardPage(driver, wait);
         dashboard.goToProgramKerja();
 
-        // ✅ Bisa dibuatkan helper di ProgramKerjaPage kalau mau lebih POM
         WebElement editButton = wait.until(ExpectedConditions.elementToBeClickable(
                 By.xpath("(//a[contains(@href,'/edit')])[1]")
         ));
@@ -71,7 +69,7 @@ public class EditProkerTest {
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("title")));
         Assert.assertTrue(driver.getCurrentUrl().contains("/edit"));
-        System.out.println("✅ Berhasil masuk halaman Edit Program Kerja.");
+        System.out.println("Berhasil masuk halaman Edit Program Kerja.");
     }
 
     @Test(priority = 4, dependsOnMethods = "test03_NavigasiKeHalamanEdit")
@@ -96,6 +94,6 @@ public class EditProkerTest {
         wait.until(ExpectedConditions.urlContains("/program-kerja/admin"));
         Assert.assertTrue(driver.getCurrentUrl().contains("/program-kerja/admin"));
 
-        System.out.println("✅ Program Kerja berhasil diedit dan kembali ke dashboard.");
+        System.out.println("Program Kerja berhasil diedit dan kembali ke dashboard.");
     }
 }

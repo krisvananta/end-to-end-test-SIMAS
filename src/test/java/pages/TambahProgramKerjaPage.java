@@ -19,7 +19,6 @@ public class TambahProgramKerjaPage {
     private By deskripsiInput = By.id("description");
     private By simpanButton = By.xpath("//button[normalize-space()='SIMPAN']");
 
-    // Diperbarui: Terima WebDriverWait dari luar
     public TambahProgramKerjaPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
@@ -44,14 +43,11 @@ public class TambahProgramKerjaPage {
         System.out.println("Tombol Simpan berhasil diklik.");
     }
 
-    // Diperbarui: Tangani DUA alert secara berurutan
     public void handleAlert() {
-        // Menangani pop-up pertama: Konfirmasi
         System.out.println("Menunggu dan menerima alert konfirmasi 'Yakin?'...");
         wait.until(ExpectedConditions.alertIsPresent()).accept();
         System.out.println("Alert konfirmasi pertama diterima.");
 
-        // Menangani pop-up kedua: Notifikasi sukses
         System.out.println("Menunggu dan menerima alert notifikasi 'Berhasil Ditambahkan'...");
         wait.until(ExpectedConditions.alertIsPresent()).accept();
         System.out.println("Alert notifikasi kedua diterima.");

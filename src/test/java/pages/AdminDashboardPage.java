@@ -11,7 +11,6 @@ public class AdminDashboardPage {
 
     private By programKerjaMenu = By.xpath("//a[normalize-space()='Program Kerja']");
 
-    // Diperbarui: Terima WebDriverWait dari luar
     public AdminDashboardPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;

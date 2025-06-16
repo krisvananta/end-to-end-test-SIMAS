@@ -38,9 +38,8 @@ public class EditProgramKerjaPage {
         driver.findElement(lokasiInput).clear();
         driver.findElement(lokasiInput).sendKeys(lokasi);
 
-        // ✅ FIX: Gunakan Select untuk <select> dropdown
         Select statusSelect = new Select(driver.findElement(statusDropdown));
-        statusSelect.selectByVisibleText(status); // contoh: "Progress", "Upcoming", dll
+        statusSelect.selectByVisibleText(status);
 
         driver.findElement(rtInput).clear();
         driver.findElement(rtInput).sendKeys(rt);
