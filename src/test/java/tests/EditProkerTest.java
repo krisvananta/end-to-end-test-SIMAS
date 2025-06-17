@@ -28,7 +28,7 @@ public class EditProkerTest {
     public void tearDown() {
         if (driver != null) {
             driver.quit();
-            System.out.println("🔒 Browser ditutup setelah test.");
+            System.out.println("Browser ditutup setelah test.");
         }
     }
 
@@ -41,7 +41,7 @@ public class EditProkerTest {
 
         wait.until(ExpectedConditions.urlContains("/masuk"));
         Assert.assertTrue(driver.getCurrentUrl().contains("/masuk"));
-        System.out.println("✅ Navigasi ke halaman login sukses.");
+        System.out.println("Navigasi ke halaman login sukses.");
     }
 
     @Test(priority = 2, dependsOnMethods = "test01_NavigasiKeHalamanLogin")
