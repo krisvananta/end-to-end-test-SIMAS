@@ -1,0 +1,2 @@
+"id","title","test case id","author","assignee","actual result","status","milestone","severity","external issues","attachments","tags"
+"3","TC08 - Tambah Program Kerja dengan Tanggal Lewat (Boundary Invalid)","12","Anugrah Aidil Fitri","Bevan Yudira","Sistem berhasil menyimpan proker dengan tanggal kemarin.","Open","","Normal","","https://d2cxucsjd6xvsd.cloudfront.net/public/team/895de700b5130df6cf8326eb0b677d504e95e22a/attachment/87dc57495b3288152ccec57a52e274599777cfa2/image.png",""
